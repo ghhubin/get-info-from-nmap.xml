@@ -8,17 +8,17 @@ except ImportError:
 import sys
 import getopt
 
-keydics = {'http':'','mongod':''}    #存放输出文件名
+keydics = {'http':['',None],'mongod':['',None]}    #存放输出文件名,和打开文件的句柄
 keyfh = {'http':None,'mongod':None}  #存放输出文件的句柄
 
 def open_output_files(str):
     for key in keydics:
-        keydics[key] = xml_filename + '.' + key
-        keyfh[key] = file(keydics[key], 'w')
+        keydics[key][0] = xml_filename + '.' + key
+        keydics[key][1] = file(keydics[key][0], 'w')
 
 def close_output_files():
     for key in keydics:
-        keyfh[key].close()
+        keydics[key][1].close()
 
 if __name__ == "__main__":
     msg = '''
@@ -67,7 +67,10 @@ Usage: python getipport.py -x nmap-outpot.xml
             for key in keydics:
                 if service.find(key) >= 0:
                     if key == 'http':
-                        keyfh[key].write('http://'+addr+':'+p+'/\n')
+                        if service.find('https') >= 0:
+                            keydics[key][1].write('https://' + addr + ':' + p + '/\n')
+                        else:
+                            keydics[key][1].write('http://'+addr+':'+p+'/\n')
                     elif key == 'mongod':
-                        keyfh[key].write(key+ '  ' + addr + ' ' + p + '\n')
+                        keydics[key][1].write(key+ '  ' + addr + ' ' + p + '\n')
     close_output_files()
