@@ -9,7 +9,6 @@ import sys
 import getopt
 
 keydics = {'http':['',None],'mongod':['',None]}    #存放输出文件名,和打开文件的句柄
-keyfh = {'http':None,'mongod':None}  #存放输出文件的句柄
 
 def open_output_files(str):
     for key in keydics:
